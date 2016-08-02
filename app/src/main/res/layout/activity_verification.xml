@@ -1,0 +1,104 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context="com.example.sanoop.cartapp.Activities.VerificationActivity"
+    android:background="#304c61">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imgSMS"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="20dp"
+        android:src="@android:drawable/ic_dialog_email"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text="SMS Sent to"
+        android:layout_below="@id/imgSMS"
+        android:textColor="#fff"
+        android:textSize="20sp"
+        android:layout_marginBottom="20dp"
+        android:id="@+id/txtSMSSent"/>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/txtSMSSent"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/rlPhone">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:id="@+id/txtPhone"
+            android:textColor="#5e879d" />
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="+919158186324"
+            android:id="@+id/edtxtPhone"
+            android:visibility="gone"
+            android:textColor="#fff" />
+    </RelativeLayout>
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text="Edit Number"
+        android:layout_marginTop="20dp"
+        android:layout_below="@id/rlPhone"
+        android:layout_marginBottom="20dp"
+        android:id="@+id/btnEditNo"
+        android:textColor="#5e879d" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_below="@id/btnEditNo"
+        android:textSize="19sp"
+        android:layout_marginBottom="16dp"
+        android:text="Please enter the verification code received by sms."
+        android:id="@+id/txtMsg"
+        android:textColor="#fff" />
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/txtMsg"
+        android:id="@+id/edtVerify"
+        android:textColor="#fff"
+        android:gravity="center"
+        android:inputType="number"
+        android:textColorHint="#fff"
+        android:hint="Verification Code"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_marginTop="20dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/edtVerify"
+        android:onClick="verify"
+        android:text="Verify"
+        android:textColor="#fff"
+        android:id="@+id/btnVerify"
+        android:background="#70a5ff" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:textColor="#fff"
+        android:onClick="resend"
+        android:text="Resend"
+        android:layout_below="@id/btnVerify"
+        android:id="@+id/btnResend"
+        android:background="#48799f" />
+
+</RelativeLayout>
