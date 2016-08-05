@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <ImageView
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:src="@android:drawable/btn_star"
+        android:layout_alignParentTop="true"
+        android:id="@+id/imageView2" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Item name"
+        android:textSize="20sp"
+        android:textColor="#000"
+        android:id="@+id/txtItemName"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@id/imageView2"
+        android:layout_toEndOf="@id/imageView2" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Buy"
+        android:textColor="@android:color/holo_blue_dark"
+        android:id="@+id/txtBuy"
+        android:textSize="18sp"
+        android:gravity="center"
+        android:layout_below="@id/txtItemName"
+        android:layout_toRightOf="@id/txtItemName"
+        android:layout_toEndOf="@id/txtItemName"
+        android:layout_marginTop="26dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/imageView2"
+        android:layout_marginLeft="25dp"
+        android:layout_marginTop="10dp"
+        android:id="@+id/llItemRate"
+        android:weightSum="1.0"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Price:"
+            android:gravity="center"
+            android:textColor="#000"
+            android:layout_weight="0.5"
+            android:id="@+id/txtItemPrice"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Qnty:"
+            android:textColor="#000"
+            android:gravity="center"
+            android:layout_weight="0.5"
+            android:id="@+id/txtItemQnty"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/llItemRate"
+        android:id="@+id/llPurchase"
+        android:layout_marginTop="20dp"
+        android:weightSum="1.0"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Rebuy"
+            android:gravity="center"
+            android:textColor="@android:color/holo_blue_dark"
+            android:layout_weight="0.5"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Purchase History"
+            android:gravity="center"
+            android:layout_weight="0.5"
+            android:textColor="@android:color/holo_blue_dark"/>
+
+    </LinearLayout>
+</RelativeLayout>

@@ -14,16 +14,25 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.sanoop.cartapp.Constant.ApiClient;
 import com.example.sanoop.cartapp.Constant.Constant;
-import com.example.sanoop.cartapp.Constant.PhoneAuth;
+import com.example.sanoop.cartapp.Constant.ApiCall;
+import com.example.sanoop.cartapp.Interface.ApiInterface;
+import com.example.sanoop.cartapp.Model.Member;
 import com.example.sanoop.cartapp.R;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.List;
 
+import okhttp3.FormBody;
+import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
+import retrofit2.Call;
+import retrofit2.Callback;
 
 public class VerificationActivity extends AppCompatActivity {
     String phone;
@@ -42,94 +51,58 @@ public class VerificationActivity extends AppCompatActivity {
     }
 
     public void verify(View view){
-        Verify ver = new Verify();
-        ver.execute(txtPhone.getText().toString(), editCode.getText().toString());
+        ApiInterface apiService =
+                ApiClient.getClient().create(ApiInterface.class);
+        RequestBody formBody = new FormBody.Builder()
+                .add(Constant.KEY_PHONE, txtPhone.getText().toString())
+                .add(Constant.KEY_CODE, editCode.getText().toString())
+                .build();
+        Call<Member> call = apiService.verifyOtpCode(formBody);
+        call.enqueue(new Callback<Member>() {
+            @Override
+            public void onResponse(Call<Member> call, retrofit2.Response<Member> response) {
+                if (response.body() != null) {
+                    if (response.code() == 400) {
+                        Toast.makeText(getApplicationContext(), "Bad Request Please make sure the data entered is correct", Toast.LENGTH_LONG).show();
+                        Log.e("RESPONSE ERROR::", response.errorBody().toString());
+                    } else {
+                        Member member = response.body();
+                        Intent intent = new Intent(getApplicationContext(), CartActivity.class);
+                        intent.putExtra("ID", member.getId().toString());
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                    }
+                }else{
+                    Toast.makeText(getApplicationContext(), "The Verification Code seems to be invalid. Hit resend to get a new code", Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Member> call, Throwable t) {
+                // Log error here since request failed
+                Toast.makeText(getApplicationContext(), "The number seems to be invalid. Please enter a valid number", Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     public void resend(View view){
-        Resend res = new Resend();
-        res.execute(txtPhone.getText().toString());
-    }
-
-    private class Verify extends AsyncTask<String, Void, Void> {
-
-        @Override
-        protected Void doInBackground(String... params) {
-            PhoneAuth otp = new PhoneAuth();
-            Response response =  otp.verifyOtpCode(params[0], params[1]);
-            String result, memberId = null;
-            JSONObject verifyJson = null;
-            boolean verification = true;
-            try {
-                result = response.body().string();
-                verifyJson = new JSONObject(result);
-                verification = verifyJson.getBoolean("verfication");
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (JSONException e) {
-                e.printStackTrace();
+        ApiInterface apiService =
+                ApiClient.getClient().create(ApiInterface.class);
+        RequestBody formBody = new FormBody.Builder()
+                .add(Constant.KEY_PHONE, txtPhone.getText().toString())
+                .build();
+        Call<Void> call = apiService.sendOtpCode(formBody);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, retrofit2.Response<Void> response) {
+                Toast.makeText(getApplicationContext(), "OTP sent, you will receive a message soon.", Toast.LENGTH_LONG).show();
             }
-            Log.i("VERIFICATION:::::", String.valueOf(verification));
-            if (response != null && response.code() == 200){
-                try {
-                    memberId = String.valueOf(verifyJson.getInt("id"));
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                Intent intent = new Intent(VerificationActivity.this, CartActivity.class);
-                intent.putExtra("ID", memberId);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
-                Log.i("SUCCESS:::::", String.valueOf(response));
-            }else if (!verification){
-                Handler handler = new Handler(Looper.getMainLooper());
-                handler.post(
-                        new Runnable() {
-                            @Override
-                            public void run() {
-                                Toast.makeText(getApplicationContext(), "The Verification Code seems to be invalid. Hit resend to get a new code", Toast.LENGTH_LONG).show();
-                            }
-                        }
-                );
-            }
-            else {
-                Handler handler = new Handler(Looper.getMainLooper());
-                handler.post(
-                        new Runnable() {
-                            @Override
-                            public void run() {
-                                Toast.makeText(getApplicationContext(), "There seems to be some error with the verification code. Please try again.", Toast.LENGTH_LONG).show();
-                            }
-                        }
-                );
-            }
-            Log.i("RESPONSE:", response.toString());
-            return null;
-        }
-    }
 
-    private class Resend extends AsyncTask<String, Void, Void> {
-
-        @Override
-        protected Void doInBackground(String... params) {
-            PhoneAuth otp = new PhoneAuth();
-            Response response =  otp.sendOtpCode(params[0]);
-            if (response != null && response.code() == 201){
-
-            } else{
-                Handler handler = new Handler(Looper.getMainLooper());
-                handler.post(
-                    new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(getApplicationContext(), "The number seems to be invalid. Please enter a valid number", Toast.LENGTH_LONG).show();
-                        }
-                    }
-                );
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Toast.makeText(getApplicationContext(), "Bad Request Please make sure the data entered is correct", Toast.LENGTH_LONG).show();
             }
-            Log.i("RESPONSE:", response.toString());
-            return null;
-        }
+        });
     }
 
     @Override

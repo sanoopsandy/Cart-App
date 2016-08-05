@@ -1,9 +1,6 @@
 package com.example.sanoop.cartapp.Activities;
 
 import android.content.Intent;
-import android.os.AsyncTask;
-import android.os.Handler;
-import android.os.Looper;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,13 +11,17 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.sanoop.cartapp.Constant.ApiClient;
 import com.example.sanoop.cartapp.Constant.Constant;
-import com.example.sanoop.cartapp.Constant.PhoneAuth;
+import com.example.sanoop.cartapp.Interface.ApiInterface;
 import com.example.sanoop.cartapp.R;
 import com.sithagi.countrycodepicker.CountryPicker;
 import com.sithagi.countrycodepicker.CountryPickerListener;
 
-import okhttp3.Response;
+import okhttp3.FormBody;
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -55,37 +56,33 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private class Register extends AsyncTask<String, Void, Void>{
-
-        @Override
-        protected Void doInBackground(String... params) {
-            PhoneAuth otp = new PhoneAuth();
-            Response response =  otp.sendOtpCode(params[0]);
-            if (response != null && response.code() == 201){
-                Intent intent = new Intent(getApplicationContext(), VerificationActivity.class);
-                intent.putExtra(Constant.KEY_PHONE, params[0]);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
-            } else{
-                Handler handler = new Handler(Looper.getMainLooper());
-                handler.post(
-                    new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(getApplicationContext(), "The number seems to be invalid. Please enter a valid number", Toast.LENGTH_LONG).show();
-                        }
-                    }
-                );
-            }
-            Log.i("RESPONSE:", response.toString());
-            return null;
-        }
-    }
-
     public void register(View view){
-        Register reg = new Register();
-        String phone = counCode + editPhone.getText().toString();
-        reg.execute(phone);
+        final String phone = counCode + editPhone.getText().toString();
+        ApiInterface apiService =
+                ApiClient.getClient().create(ApiInterface.class);
+        RequestBody formBody = new FormBody.Builder()
+                .add(Constant.KEY_PHONE, phone)
+                .build();
+        Call<Void> call = apiService.sendOtpCode(formBody);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, retrofit2.Response<Void> response) {
+                if (response.code() == 400) {
+                    Toast.makeText(getApplicationContext(), "Bad Request Please make sure the data entered is correct", Toast.LENGTH_LONG).show();
+                    Log.e("RESPONSE ERROR::", response.errorBody().toString());
+                } else {
+                    Intent intent = new Intent(getApplicationContext(), VerificationActivity.class);
+                    intent.putExtra(Constant.KEY_PHONE, phone);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                }
+            }
+            @Override
+            public void onFailure(Call<Void>call, Throwable t) {
+                // Log error here since request failed
+                Toast.makeText(getApplicationContext(), "The number seems to be invalid. Please enter a valid number", Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     @Override
