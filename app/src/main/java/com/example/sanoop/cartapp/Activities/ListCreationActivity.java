@@ -1,7 +1,6 @@
 package com.example.sanoop.cartapp.Activities;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.format.DateFormat;
@@ -14,32 +13,21 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.sanoop.cartapp.Adapter.CartListAdapter;
 import com.example.sanoop.cartapp.Adapter.ItemListAdapter;
-import com.example.sanoop.cartapp.Constant.ApiCall;
 import com.example.sanoop.cartapp.Constant.ApiClient;
 import com.example.sanoop.cartapp.Constant.Constant;
 import com.example.sanoop.cartapp.Interface.ApiInterface;
-import com.example.sanoop.cartapp.Model.Cart;
-import com.example.sanoop.cartapp.Model.CartResponse;
 import com.example.sanoop.cartapp.Model.Item;
 import com.example.sanoop.cartapp.R;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import okhttp3.FormBody;
 import okhttp3.RequestBody;
-import okhttp3.Response;
 import retrofit2.Call;
 import retrofit2.Callback;
 

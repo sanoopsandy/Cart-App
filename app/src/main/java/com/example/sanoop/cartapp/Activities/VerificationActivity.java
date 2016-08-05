@@ -1,9 +1,6 @@
 package com.example.sanoop.cartapp.Activities;
 
 import android.content.Intent;
-import android.os.AsyncTask;
-import android.os.Handler;
-import android.os.Looper;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,21 +13,12 @@ import android.widget.Toast;
 
 import com.example.sanoop.cartapp.Constant.ApiClient;
 import com.example.sanoop.cartapp.Constant.Constant;
-import com.example.sanoop.cartapp.Constant.ApiCall;
 import com.example.sanoop.cartapp.Interface.ApiInterface;
 import com.example.sanoop.cartapp.Model.Member;
 import com.example.sanoop.cartapp.R;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
-import java.util.List;
-
 import okhttp3.FormBody;
-import okhttp3.Request;
 import okhttp3.RequestBody;
-import okhttp3.Response;
 import retrofit2.Call;
 import retrofit2.Callback;
 
